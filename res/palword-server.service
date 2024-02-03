@@ -1,0 +1,13 @@
+[Unit]
+Description=Palworld Server
+After=network.target
+
+[Service]
+ExecStart=/home/steam/.local/share/Steam/steamapps/common/PalServer/PalServer.sh -port=8211 -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS
+Restart=always
+WorkingDirectory=/home/steam
+User=steam
+Group=steam
+
+[Install]
+WantedBy=multi-user.target
