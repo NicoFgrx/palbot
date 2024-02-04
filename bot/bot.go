@@ -120,6 +120,17 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			log.Fatal("Error while getting status of server")
 
 		}
+
+		if status.Data.Status == "running" {
+			//
+			advanced_status := formatFieldsStatus(status)
+			s.ChannelMessageSendEmbed(ChannelID, &discordgo.MessageEmbed{
+				Title:       ":man_mage: palbot :man_mage:",
+				Fields:      advanced_status,
+				Description: fmt.Sprintf("Server is currently %s", status.Data.Status),
+			})
+			return
+		}
 		s.ChannelMessageSend(ChannelID, fmt.Sprintf("Server is currently %s", status.Data.Status))
 		return
 	} else {
@@ -127,4 +138,32 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+}
+
+func formatFieldsStatus(data api.LXCStatusResponse) []*discordgo.MessageEmbedField {
+	var result []*discordgo.MessageEmbedField
+
+	resources := discordgo.MessageEmbedField{
+		Name:   "Resources",
+		Inline: true,
+	}
+	used := discordgo.MessageEmbedField{
+		Name:   "Used (%)",
+		Inline: true,
+	}
+
+	// vCPU
+	resources.Value += "vCPU\n"
+	used.Value += fmt.Sprintf("%d\n", int(data.Data.CPU*100))
+
+	// RAM
+	resources.Value += "RAM\n"
+	ram_used := data.Data.Mem
+	ram_max := data.Data.Maxmem
+	ram_average := (ram_used * 100) / ram_max
+	used.Value += fmt.Sprintf("%d\n", ram_average)
+
+	result = append(result, &resources, &used)
+
+	return result
 }
