@@ -54,4 +54,8 @@ On VMID 103
 
 ### Usage
 
-<img src="./res/image.png">
+<img src="./res/start.png">
+<img src="./res/status_running.png">
+<img src="./res/shutdown.png">
+<img src="./res/status_stopped.png">
+<img src="./res/other.png">
