@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	api "github.com/NicoFgrx/palbot-monitoring/api"
+	api "github.com/NicoFgrx/palbot/api"
 	"github.com/joho/godotenv"
 )
 

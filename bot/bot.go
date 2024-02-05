@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/NicoFgrx/palbot-monitoring/api"
+	"github.com/NicoFgrx/palbot/api"
 	"github.com/bwmarrin/discordgo"
 )
 

@@ -7,8 +7,8 @@ import (
 
 	"runtime"
 
-	"github.com/NicoFgrx/palbot-monitoring/api"
-	"github.com/NicoFgrx/palbot-monitoring/bot"
+	"github.com/NicoFgrx/palbot/api"
+	"github.com/NicoFgrx/palbot/bot"
 	"github.com/joho/godotenv"
 )
 
