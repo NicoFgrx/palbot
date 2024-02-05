@@ -1,4 +1,4 @@
-module github.com/NicoFgrx/palbot-monitoring
+module github.com/NicoFgrx/palbot
 
 go 1.21.3
 
