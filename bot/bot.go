@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/NicoFgrx/palbot/api"
 	"github.com/bwmarrin/discordgo"
@@ -38,6 +39,9 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// start goroutine to check network traffic under 1k/s bandwith
+	go checkTraffic(1000000, discord)
 
 	// Wait here until CTRL-C or other term signal is received.
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
@@ -166,4 +170,35 @@ func formatFieldsStatus(data api.LXCStatusResponse) []*discordgo.MessageEmbedFie
 	result = append(result, &resources, &used)
 
 	return result
+}
+
+// Check by period the limit netout given in parameters
+func checkTraffic(limit int, discord *discordgo.Session) {
+
+	// overide rate limit at 1kbis/s, testing purpose
+	// limit = 1000000
+
+	// Init ticket
+	duration := 10 * time.Second // FIXME Second => Minute
+	ticker := time.NewTicker(duration)
+	// fmt.Print("DEBUG : in go routine\n")
+
+	// check each 10 min
+	for range ticker.C {
+
+		// Get current netinput
+		status, err := Client.Status(Node, Lxc)
+		if err != nil {
+			log.Fatal("Error while checking traffic input")
+		}
+		// fmt.Printf("DEBUG : in ticker loop, status=%s netout=%d\n", status.Data.Status, status.Data.Netout)
+
+		// Check if  server is running and current netin is under limit
+		if status.Data.Status == "running" && status.Data.Netout <= limit {
+			// send message
+			discord.ChannelMessageSend(ChannelID, fmt.Sprintf("Low network output detected, can we shut the server ?"))
+		}
+
+	}
+
 }
